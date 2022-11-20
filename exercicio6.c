@@ -64,6 +64,28 @@ void listarAbate(tgado g[]){
 		
 	}
 }
+
+void salvaArquivo(tgado g[]){
+	FILE *arq;
+	int i=0;
+	arq=fopen("dadosGado.txt","wb");
+	fwrite(&g[i],sizeof(tgado),qtd,arq);
+	printf("Dados salvos com sucesso\n");
+	fclose(arq);
+}
+//-----------------------------
+void carregaArquivo(tgado g[]){
+	FILE *arq;
+	arq=fopen("dadosGado.txt","rb");
+	if(arq==NULL){
+	  printf("Arquivo nao encontrado :(\n");
+	  return;
+	  }// fim if
+	 while(fread(&g[qtd],sizeof(tgado),1,arq) >0 )
+	      qtd++;  
+	 printf("Dados carregados com sucesso !\n");
+	fclose(arq);
+}
 int menu(){
 	int op;
 	printf("*** Sistema de Cadastro de Gado ***\n");
@@ -81,6 +103,7 @@ int main(){
 	tgado gados[100];
 	char nome[30];
 	int opcao;
+	carregaArquivo(gados);
 	do{
 		opcao = menu();
 		switch(opcao){
@@ -98,6 +121,7 @@ int main(){
 				listarAbate(gados);
 				break;
 			case 0: printf("Saindo...\n");
+				salvaArquivo(gados);
 				break;
 			default: printf("Opcao invalida!!\n");	
 		}
