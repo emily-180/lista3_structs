@@ -60,6 +60,28 @@ void procuraAno(tlivro l[], int ano){
 	}
 }
 
+void salvaArquivo(tlivro livros[]){
+	FILE *arq;
+	int i=0;
+	arq=fopen("dadosLivros.txt","wb");
+	fwrite(&livros[i],sizeof(tlivro),qtd,arq);
+	printf("Dados salvos com sucesso\n");
+	fclose(arq);
+}
+//-----------------------------
+void carregaArquivo(tlivro livros[]){
+	FILE *arq;
+	arq=fopen("dadosLivros.txt","rb");
+	if(arq==NULL){
+	  printf("Arquivo nao encontrado :(\n");
+	  return;
+	  }// fim if
+	 while(fread(&livros[qtd],sizeof(tlivro),1,arq) >0 )
+	      qtd++;  
+	 printf("Dados carregados com sucesso !\n");
+	fclose(arq);
+}
+
 int menu(){
 	int op;
 	printf("*** Sistema de Cadastro de Livros ***\n");
@@ -77,6 +99,7 @@ int main(){
 	tlivro livros[100];
 	char titulo[30];
 	int opcao, ano;
+	carregaArquivo(livros);
 	do{
 		opcao = menu();
 		switch(opcao){
@@ -84,7 +107,7 @@ int main(){
 				addLivro(livros);
 				printf("Item cadastrado!");
 				break;
-			case 2: printf("\n** Listar Procedimento** \n");
+			case 2: printf("\n** Listar Livro** \n");
 				listaLivro(livros);
 				break;
 			case 3:
@@ -100,6 +123,7 @@ int main(){
 				procuraAno(livros, ano);
 				break;
 			case 0: printf("Saindo...\n");
+					salvaArquivo(livros);
 				break;
 			default: printf("Opcao invalida!!\n");	
 		}
@@ -108,5 +132,3 @@ int main(){
 	}while(opcao!=0);
 	return 0;
 }
-
-
