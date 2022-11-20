@@ -94,6 +94,27 @@ void maiorMedia(taluno a[]){
 	printf("--> A maior media e: %.2f. \nEla perrtece a %s", mMedia , a[pos].nome);
 }
 
+void salvaArquivo(taluno a[]){
+	FILE *arq;
+	int i=0;
+	arq=fopen("dadosAlunos.txt","wb");
+	fwrite(&a[i],sizeof(taluno),qtd,arq);
+	printf("Dados salvos com sucesso\n");
+	fclose(arq);
+}
+//-----------------------------
+void carregaArquivo(taluno a[]){
+	FILE *arq;
+	arq=fopen("dadosAlunos.txt","rb");
+	if(arq==NULL){
+	  printf("Arquivo nao encontrado :(\n");
+	  return;
+	  }// fim if
+	 while(fread(&a[qtd],sizeof(taluno),1,arq) >0 )
+	      qtd++;  
+	 printf("Dados carregados com sucesso !\n");
+	fclose(arq);
+}
 int menu(){
 	int op;
 	printf("*** Sistema de Cadastro de Alunos ***\n");
@@ -112,6 +133,7 @@ int main(){
 	taluno alunos[100];
 	char nome[40];
 	int opcao, op, matricula;
+	carregaArquivo(alunos);
 	do{
 		opcao = menu();
 		switch(opcao){
@@ -148,6 +170,7 @@ int main(){
 				maiorMedia(alunos);
 				break;
 			case 0: printf("Saindo...\n");
+				salvaArquivos();
 				break;
 			default: printf("Opcao invalida!!\n");	
 		}
@@ -156,5 +179,3 @@ int main(){
 	}while(opcao!=0);
 	return 0;
 }
-
-
