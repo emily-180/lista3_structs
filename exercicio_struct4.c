@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 typedef struct{
 	char nome[40];
@@ -62,7 +61,27 @@ void calcula(teletro e[], float valor, char busca[40]){
 		}
 	}
 }
-
+void salvaArquivo(teletro e[]){
+	FILE *arq;
+	int i=0;
+	arq=fopen("dadosEletro.txt","wb");
+	fwrite(&e[i],sizeof(teletro),qtd,arq);
+	printf("Dados salvos com sucesso\n");
+	fclose(arq);
+}
+//-----------------------------
+void carregaArquivo(teletro e[]){
+	FILE *arq;
+	arq=fopen("dadosEletro.txt","rb");
+	if(arq==NULL){
+	  printf("Arquivo nao encontrado :(\n");
+	  return;
+	  }// fim if
+	 while(fread(&e[qtd],sizeof(teletro),1,arq) >0 )
+	      qtd++;  
+	 printf("Dados carregados com sucesso !\n");
+	fclose(arq);
+}
 int menu(){
 	int op;
 	printf("*** Sistema de Cadastro de Eletrodomestico ***\n");
@@ -82,6 +101,7 @@ int main(){
 	char nome[40];
 	int opcao;
 	float valor;
+	carregaArquivo(eletros);
 	do{
 		opcao = menu();
 		switch(opcao){
@@ -109,6 +129,7 @@ int main(){
 				calcula(eletros, valor, nome);
 				break;
 			case 0: printf("Saindo...\n");
+				salvaArquivo(eletros);
 				break;
 			default: printf("Opcao invalida!!\n");	
 		}
