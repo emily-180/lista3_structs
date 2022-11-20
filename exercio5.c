@@ -102,7 +102,27 @@ void listarEmprestimos(tjogo j[]){
 			printf("--> O jogo %s , esta emprestado para %s\n", j[i].titulo, j[i].tdata.npessoa );
  	}
 }
-
+void salvaArquivo(tjogo j[]){
+	FILE *arq;
+	int i=0;
+	arq=fopen("dadosJogo.txt","wb");
+	fwrite(&j[i],sizeof(tjogo),qtd,arq);
+	printf("Dados salvos com sucesso\n");
+	fclose(arq);
+}
+//-----------------------------
+void carregaArquivo(tjogo j[]){
+	FILE *arq;
+	arq=fopen("dadosJogo.txt","rb");
+	if(arq==NULL){
+	  printf("Arquivo nao encontrado :(\n");
+	  return;
+	  }// fim if
+	 while(fread(&j[qtd],sizeof(tjogo),1,arq) >0 )
+	      qtd++;  
+	 printf("Dados carregados com sucesso !\n");
+	fclose(arq);
+}
 int menu(){
 	int op;
 	printf("*** Sistema de Cadastro de Jogos ***\n");
@@ -122,6 +142,7 @@ int main(){
 	tjogo jogos[100];
 	char nome[30];
 	int opcao;
+	carregaArquivo(jogos);
 	do{
 		opcao = menu();
 		switch(opcao){
@@ -161,6 +182,7 @@ int main(){
 				listarEmprestimos(jogos);
 				break;
 			case 0: printf("Saindo...\n");
+				salvaArquivo(jogos);
 				break;
 			default: printf("Opcao invalida!!\n");	
 		}
